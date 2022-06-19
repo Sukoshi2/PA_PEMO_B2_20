@@ -4,18 +4,20 @@ import 'package:proyek_akhir/pages/invoice.dart';
 import 'package:proyek_akhir/widgets/color.dart';
 
 class DetailMenu extends StatelessWidget {
-  const DetailMenu(
-      {Key? key,
-      required this.nama,
-      required this.jenis,
-      required this.harga,
-      required this.desc})
-      : super(key: key);
+  const DetailMenu({
+    Key? key,
+    required this.nama,
+    required this.jenis,
+    required this.harga,
+    required this.desc,
+    required this.gambar,
+  }) : super(key: key);
 
   final String nama;
   final String jenis;
   final String harga;
   final String desc;
+  final String gambar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,10 +33,9 @@ class DetailMenu extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          Container(
+          Image(
+            image: AssetImage(gambar),
             height: 300,
-            color: orange2,
-            child: Placeholder(color: black),
           ),
           Padding(
             padding: const EdgeInsets.all(10),
@@ -68,8 +69,7 @@ class DetailMenu extends StatelessWidget {
                   "Deskripsi",
                   style: TextStyle(fontSize: 18),
                 ),
-                Text(
-                    desc),
+                Text(desc),
               ],
             ),
           ),
