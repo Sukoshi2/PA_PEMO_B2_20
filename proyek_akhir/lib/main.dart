@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:proyek_akhir/pages/detailmenu.dart';
@@ -10,10 +11,13 @@ import 'package:proyek_akhir/pages/signin.dart';
 import 'package:proyek_akhir/pages/verify.dart';
 import 'package:proyek_akhir/widgets/bottomnav.dart';
 import 'package:proyek_akhir/widgets/color.dart';
+import 'package:firebase_core/firebase_core.dart';
 
- void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  await Firebase.initializeApp();
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(const MyApp());
 }
 
@@ -29,7 +33,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         fontFamily: 'Poppins',
       ),
-      home: landing(),
+      home: BotNav(),
       debugShowCheckedModeBanner: false,
     );
   }

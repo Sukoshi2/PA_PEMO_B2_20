@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:proyek_akhir/firestore/firebase.dart';
 import 'package:proyek_akhir/widgets/color.dart';
 import 'package:get/get.dart';
 import 'package:proyek_akhir/pages/keranjang.dart';
@@ -7,11 +9,14 @@ import 'package:proyek_akhir/widgets/card2.dart';
 import 'package:proyek_akhir/widgets/textfield1.dart';
 import 'package:proyek_akhir/widgets/drawer.dart';
 
+import '../firestore/getimagesurl.dart';
+
 class Menu extends StatelessWidget {
-  const Menu({Key? key}) : super(key: key);
+  Menu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    FirestoreController fcs = Get.put(FirestoreController());
     return Scaffold(
       drawer: DrawerAkun(),
       appBar: AppBar(
@@ -60,85 +65,25 @@ class Menu extends StatelessWidget {
         child: ListView(
           children: [
             TextField1(),
-            Card2(
-              jenis: "Nasi Goreng",
-              nama: "Seafood",
-              harga: "Rp 27.000",
-              gambar: "assets/images/logo.png",
-              desc:
-                  "Nasi goreng yang berisi udang dan cumi-cumi diberi topping sunny side egg",
-            ),
-            Card2(
-              jenis: "Nasi Goreng",
-              nama: "Surga Dunia",
-              harga: "Rp 22.000",
-              gambar: "assets/images/logo.png",
-              desc:
-                  "Ini adalah Nasi Goreng porsinya besar daripada nasi goreng yang lain specialnya adalah tambahan kulit goreng dan kripik belinjo",
-            ),
-            Card2(
-              jenis: "Nasi Goreng",
-              nama: "Jontor level 5",
-              harga: "Rp 24.000",
-              gambar: "assets/images/logo.png",
-              desc:
-                  "Nasi goreng yang terpedas di NasGOr terdiri dari cabe 7 rupa, dan menggunakan takaran sendok yaitu 10 sendok untuk level 5",
-            ),
-            Card2(
-              jenis: "Es",
-              nama: "Jeruk",
-              harga: "Rp 7000",
-              gambar: "assets/images/logo.png",
-              desc:
-                  "Minuman Es Jeruk yang sangat enak sayang, buah jeruknya kadang-kadang ketika tidak beruntung rasanya asem, dan ketika beruntung rasanya manis ngak ketulungan",
-            ),
-            Card2(
-              jenis: "Kwetiaw",
-              nama: "Kambing",
-              harga: "Rp 30000",
-              gambar: "assets/images/logo.png",
-              desc:
-                  "Kwetiaw kambing, karena kambing termasuk bahan yang lumayan mahal dan rasanya enak ketika orang itu suka, bumbunya beda daripada yang lain karena bumbu rasa daerah timur tengah",
-            ),
-            Card2(
-              jenis: "Nasi Goreng",
-              nama: "Mawut",
-              harga: "Rp 20000",
-              gambar: "assets/images/logo.png",
-              desc:
-                  "Nasi Goreng mawut, yang berisi dari gabungan nasi dan sedikit mie",
-            ),
-            Card2(
-              jenis: "Nasi Goreng",
-              nama: "Ikan Asin",
-              harga: "Rp 19000",
-              gambar: "assets/images/logo.png",
-              desc:
-                  "Nasi Goreng ikan asin, nasi goreng yang berisi potongan dari ikan asin",
-            ),
-            Card2(
-              jenis: "Bihun",
-              nama: "Bihun Goreng",
-              harga: "Rp 16000",
-              gambar: "assets/images/logo.png",
-              desc:
-                  "bukan hanya nasi goreng dan kwetiaw disini juga ada bihun goreng",
-            ),
-            Card2(
-              jenis: "Es",
-              nama: "Teh",
-              harga: "Rp 4000",
-              gambar: "assets/images/logo.png",
-              desc:
-                  "Tidak tahu kenapa es teh disini berbeda dari yang lain silahkan coba sendiri",
-            ),
-            Card2(
-              jenis: "Lalapan",
-              nama: "Lalapan Ayam Besar + Nasi",
-              harga: "Rp 23000",
-              gambar: "assets/images/logo.png",
-              desc:
-                  "pada NasGOr tidak hanya ada nasi goreng, ada juga lalapan untuk kamu yang males makan nasi goreng, dan rasanya tidak kalah dari nasi gorengnya",
+            StreamBuilder<QuerySnapshot>(
+              stream: fcs.menus.value.snapshots(),
+              builder: (_, snapshot) {
+                return (snapshot.hasData)
+                    ? Column(
+                        children: snapshot.data!.docs
+                            .map(
+                              (e) => Card2(
+                                jenis: e.get("jenis"),
+                                nama: e.get("nama"),
+                                harga: e.get("nama"),
+                                gambar: e.get("gambar"),
+                                desc: e.get("desc"),
+                              ),
+                            )
+                            .toList(),
+                      )
+                    : Text("Loading");
+              },
             ),
           ],
         ),

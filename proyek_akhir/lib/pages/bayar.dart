@@ -32,7 +32,7 @@ class Pembayaran extends StatelessWidget {
               children: [
                 Text("Lokasi"),
                 Text("Jl. Wakanda No.69 RT.777, Samarinda - Kalimantan Timur")
-                ],
+              ],
             ),
           ),
           Divider(
@@ -50,7 +50,7 @@ class Pembayaran extends StatelessWidget {
                   child: Row(
                     children: [
                       Image(
-                        image: AssetImage("assets/logo.png"),
+                        image: AssetImage("assets/images/logo.png"),
                         width: 50,
                       ),
                       SizedBox(

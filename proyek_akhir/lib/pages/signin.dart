@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:proyek_akhir/pages/home.dart';
 import 'package:proyek_akhir/pages/signup.dart';
 import 'package:proyek_akhir/widgets/bottomnav.dart';
 import 'package:proyek_akhir/widgets/color.dart';
@@ -9,6 +11,19 @@ class SignIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final phonenumber = TextEditingController();
+    FirebaseFirestore user = FirebaseFirestore.instance;
+    CollectionReference users = user.collection("users");
+    List login = [];
+    Future getData() async {
+      await users.get().then((querySnapshot) {
+        for (var result in querySnapshot.docs) {
+          login.add(result.data());
+        }
+      });
+      return login;
+    }
+
     return Scaffold(
       backgroundColor: Color(0xffd93728),
       body: Center(
@@ -17,9 +32,10 @@ class SignIn extends StatelessWidget {
             SizedBox(height: 50),
             Container(
               child: Image(
-                  image: AssetImage(
-                "assets/logo-mono.png",
-              )),
+                image: AssetImage(
+                  "assets/images/logo-mono.png",
+                ),
+              ),
               height: 80,
               width: 80,
             ),
@@ -50,7 +66,7 @@ class SignIn extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1),
                         maxLength: 11,
-                        keyboardType: TextInputType.phone,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           prefixText: '+62     ',
                           counterText: "",
@@ -60,6 +76,7 @@ class SignIn extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
+                        controller: phonenumber,
                       ),
                     ),
                   ],
@@ -82,7 +99,17 @@ class SignIn extends StatelessWidget {
                   shadowColor: MaterialStateProperty.all(Colors.transparent),
                 ),
                 onPressed: () {
-                  Get.to(() => BotNav());
+                  users.doc("+62" + phonenumber.value.text).get().then((value) {
+                    if (value.exists) {
+                      Get.to(() => BotNav());
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          "Nomor yang kamu masukkan salah",
+                        ),
+                      ));
+                    }
+                  });
                 },
                 child: Text(
                   "Masuk",
@@ -107,7 +134,7 @@ class SignIn extends StatelessWidget {
                 Container(
                   child: TextButton(
                     onPressed: () {
-                      Get.to(() => SignUp());
+                      Get.to(() => DataDiri());
                     },
                     child: Text(
                       'Daftar',
